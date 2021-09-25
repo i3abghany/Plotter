@@ -52,3 +52,40 @@ class TestParser(unittest.TestCase):
         errors = ast.errors
         self.assertEqual(len(errors), 1)
         self.assertEqual(errors[0], 'Parser Error: Unexpected token 1.0 of type \'NUMBER\', expected \'EOF\'.')
+
+    def test_expect_right_paren(self):
+        expr = "(1 + 2 * x"
+        parser = Parser(expr)
+        ast = parser.parse()
+        errors = ast.errors
+
+        self.assertEqual(len(errors), 1)
+        self.assertEqual(errors[0], "Parser Error: Unexpected token of type 'EOF', expected 'RIGHT_PAREN'.")
+
+    def test_correct_parenthesized_expression(self):
+        expr = "(1 + 2) * x"
+        parser = Parser(expr)
+        ast = parser.parse()
+        errors = ast.errors
+        self.assertEqual(len(errors), 0)
+
+        root_node = ast.main_expression
+        self.assertTrue(isinstance(root_node, BinaryExpressionNode))
+
+        paren_expr = root_node.left_expression
+        self.assertTrue(isinstance(paren_expr, ParenthesizedExpressionNode))
+
+        main_paren_expr = paren_expr.main_expression
+        self.assertTrue(isinstance(main_paren_expr, BinaryExpressionNode))
+
+        lhs = main_paren_expr.left_expression
+        self.assertTrue(isinstance(lhs, NumberExpressionNode))
+
+        rhs = main_paren_expr.right_expression
+        self.assertTrue(isinstance(rhs, NumberExpressionNode))
+
+        operator = root_node.operator_token
+        self.assertEqual(operator.kind, TokenKind.STAR)
+
+        identifier = root_node.right_expression
+        self.assertTrue(isinstance(identifier, IdentifierNode))

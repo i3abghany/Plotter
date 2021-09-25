@@ -1,56 +1,7 @@
 from expr_parser.lexer import Lexer
 from expr_parser.tokens import Token, TokenKind
-
-
-class NumberExpressionNode:
-    def __init__(self, number_token):
-        self.number_token = number_token
-
-    def get_children(self):
-        return [self.number_token]
-
-
-class IdentifierNode:
-    def __init__(self, identifier_token):
-        self.identifier_token = identifier_token
-
-    def get_children(self):
-        return [self.identifier_token]
-
-
-class BinaryExpressionNode:
-    def __init__(self, left_expression, operator_token, right_expression):
-        self.left_expression = left_expression
-        self.operator_token = operator_token
-        self.right_expression = right_expression
-
-    def get_children(self):
-        return [
-            self.left_expression,
-            self.operator_token,
-            self.right_expression
-        ]
-
-
-def print_ast(node, indent="", is_last=True):
-    if node is None:
-        return
-
-    indent_extension = '└── ' if is_last else '├── '
-
-    print(indent, end='')
-    print(indent_extension, end='')
-
-    print(type(node).__name__, end='')
-    if type(node).__name__ == 'Token' and node.value is not None:
-        print(' ' + str(node.value), end='')
-
-    print()
-
-    indent += '    ' if is_last else '│    '
-
-    for i, e in enumerate(node.get_children()):
-        print_ast(e, indent, i == len(node.get_children()) - 1)
+from expr_parser.AST import AST
+from expr_parser.nodes import *
 
 
 class Parser:
@@ -60,7 +11,17 @@ class Parser:
         self.position = 0
         self.errors = self.lexer.errors
 
+    def parse_parenthesized_expression(self):
+        open_paren = self.match_if(TokenKind.LEFT_PAREN)
+        main_expression = self.parse_term()
+        close_paren = self.match_if(TokenKind.RIGHT_PAREN)
+
+        return ParenthesizedExpressionNode(open_paren, main_expression, close_paren)
+
     def parse_primary_expression(self):
+        if self.does_match(TokenKind.LEFT_PAREN):
+            return self.parse_parenthesized_expression()
+
         if self.does_match(TokenKind.IDENTIFIER):
             identifier_token = self.match_if(TokenKind.IDENTIFIER)
             return IdentifierNode(identifier_token)
@@ -122,11 +83,3 @@ class Parser:
 
     def get_current(self):
         return self.peek(0)
-
-
-class AST:
-
-    def __init__(self, errors, main_expression, eof_token):
-        self.main_expression = main_expression
-        self.eof_token = eof_token
-        self.errors = errors
