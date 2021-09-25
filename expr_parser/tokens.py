@@ -11,6 +11,7 @@ class TokenKind(enum.Enum):
     IDENTIFIER = 5
     LEFT_PAREN = 6
     RIGHT_PAREN = 7
+    EOF = 8
 
 
 class Token:
@@ -23,4 +24,10 @@ class Token:
         self.position = position
 
     def __repr__(self):
-        return '{kind: ' + self.kind.name + ', value: ' + str(self.value) + '}'
+        return f'Token({self.kind.name}, {str(self.value) + ", " if self.value is not None else ""}{self.position})'
+
+    def __eq__(self, other):
+        return self.kind == other.kind and self.value == other.value and self.position == other.position
+
+    def get_children(self):
+        return []
