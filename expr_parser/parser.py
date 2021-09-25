@@ -2,7 +2,7 @@ from expr_parser.lexer import Lexer
 from expr_parser.tokens import Token, TokenKind
 
 
-class NumberExpression:
+class NumberExpressionNode:
     def __init__(self, number_token):
         self.number_token = number_token
 
@@ -10,7 +10,15 @@ class NumberExpression:
         return [self.number_token]
 
 
-class BinaryExpression:
+class IdentifierNode:
+    def __init__(self, identifier_token):
+        self.identifier_token = identifier_token
+
+    def get_children(self):
+        return [self.identifier_token]
+
+
+class BinaryExpressionNode:
     def __init__(self, left_expression, operator_token, right_expression):
         self.left_expression = left_expression
         self.operator_token = operator_token
@@ -53,25 +61,43 @@ class Parser:
         self.errors = self.lexer.errors
 
     def parse_primary_expression(self):
-        number_token = self.match(TokenKind.NUMBER)
-        return NumberExpression(number_token)
+        if self.does_match(TokenKind.IDENTIFIER):
+            identifier_token = self.match_if(TokenKind.IDENTIFIER)
+            return IdentifierNode(identifier_token)
+
+        number_token = self.match_if(TokenKind.NUMBER)
+        return NumberExpressionNode(number_token)
 
     def parse(self):
-        expression = self.parse_expression()
-        eof_token = self.match(TokenKind.EOF)
+        expression = self.parse_term()
+        eof_token = self.match_if(TokenKind.EOF)
         return AST(self.errors, expression, eof_token)
 
-    def parse_expression(self):
-        left = self.parse_primary_expression()
-
-        while self.get_current().kind == TokenKind.PLUS or self.get_current().kind == TokenKind.MINUS:
+    def parse_term(self):
+        left = self.parse_factor()
+        while self.get_current().kind == TokenKind.PLUS or \
+                self.get_current().kind == TokenKind.MINUS:
             operator_token = self.next_token()
-            right = self.parse_primary_expression()
-            left = BinaryExpression(left, operator_token, right)
+            right = self.parse_factor()
+            left = BinaryExpressionNode(left, operator_token, right)
 
         return left
 
-    def match(self, token_kind):
+    def parse_factor(self):
+        left = self.parse_primary_expression()
+
+        while self.get_current().kind == TokenKind.STAR or \
+                self.get_current().kind == TokenKind.SLASH:
+            operator_token = self.next_token()
+            right = self.parse_primary_expression()
+            left = BinaryExpressionNode(left, operator_token, right)
+
+        return left
+
+    def does_match(self, token_kind):
+        return self.get_current().kind == token_kind
+
+    def match_if(self, token_kind):
         if self.get_current().kind == token_kind:
             return self.next_token()
         else:

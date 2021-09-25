@@ -41,17 +41,17 @@ class Lexer:
                 self.tokens.append(self.lex_identifier())
                 continue
             elif self.current == '(':
-                self.tokens.append(Token(TokenKind.LEFT_PAREN, None, self.position))
+                self.tokens.append(Token(TokenKind.LEFT_PAREN, self.current, self.position))
             elif self.current == ')':
-                self.tokens.append(Token(TokenKind.RIGHT_PAREN, None, self.position))
+                self.tokens.append(Token(TokenKind.RIGHT_PAREN, self.current, self.position))
             elif self.current == '*':
-                self.tokens.append(Token(TokenKind.STAR, None, self.position))
+                self.tokens.append(Token(TokenKind.STAR, self.current, self.position))
             elif self.current == '/':
-                self.tokens.append(Token(TokenKind.SLASH, None, self.position))
+                self.tokens.append(Token(TokenKind.SLASH, self.current, self.position))
             elif self.current == '+':
-                self.tokens.append(Token(TokenKind.PLUS, None, self.position))
+                self.tokens.append(Token(TokenKind.PLUS, self.current, self.position))
             elif self.current == '-':
-                self.tokens.append(Token(TokenKind.MINUS, None, self.position))
+                self.tokens.append(Token(TokenKind.MINUS, self.current, self.position))
             else:
                 self.errors.append(f'Lexer Error: Unexpected character \'{self.current}\' at column {self.position}')
                 self.tokens.append(Token(TokenKind.BAD, self.current, self.position))

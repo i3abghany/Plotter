@@ -23,7 +23,7 @@ class TestLexer(unittest.TestCase):
         self.assertEqual(tokens[0].position, expr.index('1123'))
 
         self.assertEqual(tokens[1].kind, TokenKind.PLUS)
-        self.assertEqual(tokens[1].value, None)
+        self.assertEqual(tokens[1].value, '+')
         self.assertEqual(tokens[1].position, expr.index('+'))
 
         self.assertEqual(tokens[2].kind, TokenKind.NUMBER)
@@ -41,13 +41,13 @@ class TestLexer(unittest.TestCase):
 
         expected_tokens = [
             Token(TokenKind.NUMBER, 1.0, expr.index('1')),
-            Token(TokenKind.PLUS, None, expr.index('+')),
-            Token(TokenKind.LEFT_PAREN, None, expr.index('(')),
+            Token(TokenKind.PLUS, '+', expr.index('+')),
+            Token(TokenKind.LEFT_PAREN, '(', expr.index('(')),
             Token(TokenKind.NUMBER, 2.0, expr.index('2')),
-            Token(TokenKind.STAR, None, expr.index('*')),
+            Token(TokenKind.STAR, '*', expr.index('*')),
             Token(TokenKind.NUMBER, 3.0, expr.index('3')),
-            Token(TokenKind.RIGHT_PAREN, None, expr.index(')')),
-            Token(TokenKind.SLASH, None, expr.index('/')),
+            Token(TokenKind.RIGHT_PAREN, ')', expr.index(')')),
+            Token(TokenKind.SLASH, '/', expr.index('/')),
             Token(TokenKind.NUMBER, 4.0, expr.index('4')),
             Token(TokenKind.EOF, None, len(expr))
         ]
@@ -66,7 +66,7 @@ class TestLexer(unittest.TestCase):
 
         expected_tokens = [
             Token(TokenKind.NUMBER, 1.0, expr.index('1')),
-            Token(TokenKind.PLUS, None, expr.index('+')),
+            Token(TokenKind.PLUS, '+', expr.index('+')),
             Token(TokenKind.NUMBER, 2.123, expr.index('2.123')),
             Token(TokenKind.BAD, '.', expr.index('.')),
             Token(TokenKind.NUMBER, 123.0, expr.index('123')),
