@@ -18,6 +18,7 @@ class Lexer:
         self.current = None
         self.position = -1
         self.tokens = []
+        self.errors = []
         self.text_repr = iter(line)
         self.next_char()
 
@@ -52,10 +53,12 @@ class Lexer:
             elif self.current == '-':
                 self.tokens.append(Token(TokenKind.MINUS, None, self.position))
             else:
+                self.errors.append(f'Lexer Error: Unexpected character \'{self.current}\' at column {self.position}')
                 self.tokens.append(Token(TokenKind.BAD, self.current, self.position))
 
             self.next_char()
 
+        self.tokens.append(Token(TokenKind.EOF, None, self.position + 1))
         return self.tokens
 
     def lex_number(self):
