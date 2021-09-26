@@ -8,10 +8,11 @@ class TokenKind(enum.Enum):
     MINUS = 2
     STAR = 3
     SLASH = 4
-    IDENTIFIER = 5
-    LEFT_PAREN = 6
-    RIGHT_PAREN = 7
-    EOF = 8
+    CARET = 5
+    IDENTIFIER = 6
+    LEFT_PAREN = 7
+    RIGHT_PAREN = 8
+    EOF = 9
 
 
 class Token:

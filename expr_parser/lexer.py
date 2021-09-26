@@ -52,6 +52,8 @@ class Lexer:
                 self.tokens.append(Token(TokenKind.PLUS, self.current, self.position))
             elif self.current == '-':
                 self.tokens.append(Token(TokenKind.MINUS, self.current, self.position))
+            elif self.current == '^':
+                self.tokens.append(Token(TokenKind.CARET, self.current, self.position))
             else:
                 self.errors.append(f'Lexer Error: Unexpected character \'{self.current}\' at column {self.position}')
                 self.tokens.append(Token(TokenKind.BAD, self.current, self.position))

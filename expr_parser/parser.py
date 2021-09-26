@@ -44,13 +44,23 @@ class Parser:
 
         return left
 
-    def parse_factor(self):
+    def parse_exponentiated_factor(self):
         left = self.parse_primary_expression()
+
+        while self.get_current().kind == TokenKind.CARET:
+            operator_token = self.next_token()
+            right = self.parse_primary_expression()
+            left = BinaryExpressionNode(left, operator_token, right)
+
+        return left
+
+    def parse_factor(self):
+        left = self.parse_exponentiated_factor()
 
         while self.get_current().kind == TokenKind.STAR or \
                 self.get_current().kind == TokenKind.SLASH:
             operator_token = self.next_token()
-            right = self.parse_primary_expression()
+            right = self.parse_exponentiated_factor()
             left = BinaryExpressionNode(left, operator_token, right)
 
         return left
