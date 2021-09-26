@@ -19,7 +19,10 @@ class Evaluator:
         if isinstance(node, NumberExpressionNode):
             return node.number_token.value
         if isinstance(node, IdentifierNode):
-            return self.variable_map[node.identifier_token.value]
+            try:
+                return self.variable_map[node.identifier_token.value]
+            except KeyError:
+                raise Exception(f"Evaluation Error: invalid identifier {node.identifier_token.value}")
 
         if isinstance(node, ParenthesizedExpressionNode):
             return self.__eval(node.main_expression)
@@ -39,6 +42,14 @@ class Evaluator:
                 return left ** right
             else:
                 raise Exception(f"Evaluation Error: Invalid binary operator \'{node.operator_token.kind.name}\'")
+        elif isinstance(node, UnaryExpressionNode):
+            if node.operator_token.kind == TokenKind.PLUS:
+                return self.__eval(node.operand)
+            elif node.operator_token.kind == TokenKind.MINUS:
+                return -self.__eval(node.operand)
+            else:
+                raise Exception(f"Evaluation Error: Invalid unary operator \'{node.operator_token.kind.name}\'")
+
 
 
 def evaluate_in_range(ast, min_x=0, max_x=1, delta=0.0):

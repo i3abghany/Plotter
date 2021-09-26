@@ -14,6 +14,15 @@ class IdentifierNode:
         return [self.identifier_token]
 
 
+class UnaryExpressionNode:
+    def __init__(self, operator_token, operand):
+        self.operator_token = operator_token
+        self.operand = operand
+
+    def get_children(self):
+        return [self.operator_token, self.operand]
+
+
 class BinaryExpressionNode:
     def __init__(self, left_expression, operator_token, right_expression):
         self.left_expression = left_expression

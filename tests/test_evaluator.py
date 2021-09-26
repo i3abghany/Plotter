@@ -57,3 +57,18 @@ class TestEvaluator(unittest.TestCase):
         result = self.get_result(expr, 'x', x)
         self.assertEqual(result, 5 * x ** (2 * (3 + 4)))
 
+    def test_simple_unary_operation(self):
+        expr = '-2'
+        result = self.get_result(expr)
+        self.assertEqual(result, -2)
+
+    def test_compound_unary_operators(self):
+        expr = '-2 * x ^ -3'
+        result = self.get_result(expr, 'x', 4)
+        x = 4
+        self.assertEqual(result, -2 * x ** -3)
+
+    def test_multiple_unary_operators(self):
+        expr = '-------------+++++++++++++++++++-----++-+-------------------3'
+        result = self.get_result(expr)
+        self.assertEqual(result, -------------+++++++++++++++++++-----++-+-------------------3)

@@ -26,6 +26,15 @@ class Parser:
             identifier_token = self.match_if(TokenKind.IDENTIFIER)
             return IdentifierNode(identifier_token)
 
+        if self.does_match(TokenKind.PLUS):
+            plus_token = self.match_if(TokenKind.PLUS)
+            operand = self.parse_term()
+            return UnaryExpressionNode(plus_token, operand)
+        elif self.does_match(TokenKind.MINUS):
+            minus_token = self.match_if(TokenKind.MINUS)
+            operand = self.parse_term()
+            return UnaryExpressionNode(minus_token, operand)
+
         number_token = self.match_if(TokenKind.NUMBER)
         return NumberExpressionNode(number_token)
 
@@ -44,12 +53,22 @@ class Parser:
 
         return left
 
-    def parse_exponentiated_factor(self):
+    def parse_unary_ops_first(self):
         left = self.parse_primary_expression()
 
         while self.get_current().kind == TokenKind.CARET:
             operator_token = self.next_token()
             right = self.parse_primary_expression()
+            left = BinaryExpressionNode(left, operator_token, right)
+
+        return left
+
+    def parse_exponentiated_factor(self):
+        left = self.parse_unary_ops_first()
+
+        while self.get_current().kind == TokenKind.CARET:
+            operator_token = self.next_token()
+            right = self.parse_unary_ops_first()
             left = BinaryExpressionNode(left, operator_token, right)
 
         return left

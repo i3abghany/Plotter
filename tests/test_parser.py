@@ -54,7 +54,7 @@ class TestParser(unittest.TestCase):
         self.assertEqual(errors[0], 'Parser Error: Unexpected token 1.0 of type \'NUMBER\', expected \'EOF\'.')
 
     def test_expect_right_paren(self):
-        expr = "(1 + 2 * x"
+        expr = '(1 + 2 * x'
         parser = Parser(expr)
         ast = parser.parse()
         errors = ast.errors
@@ -63,7 +63,7 @@ class TestParser(unittest.TestCase):
         self.assertEqual(errors[0], "Parser Error: Unexpected token of type 'EOF', expected 'RIGHT_PAREN'.")
 
     def test_correct_parenthesized_expression(self):
-        expr = "(1 + 2) * x"
+        expr = '(1 + 2) * x'
         parser = Parser(expr)
         ast = parser.parse()
         errors = ast.errors
@@ -89,3 +89,24 @@ class TestParser(unittest.TestCase):
 
         identifier = root_node.right_expression
         self.assertTrue(isinstance(identifier, IdentifierNode))
+
+    def test_unary_operators(self):
+        expr = '-2'
+        parser = Parser(expr)
+        ast = parser.parse()
+        errors = ast.errors
+        self.assertEqual(len(errors), 0)
+        self.assertTrue(isinstance(ast.main_expression, UnaryExpressionNode))
+
+        expr = '-(x ^ 2)'
+        parser = Parser(expr)
+        ast = parser.parse()
+        errors = ast.errors
+        self.assertEqual(len(errors), 0)
+        self.assertTrue(isinstance(ast.main_expression, UnaryExpressionNode))
+
+        self.assertEqual(ast.main_expression.operator_token.kind, TokenKind.MINUS)
+        self.assertTrue(isinstance(ast.main_expression.operand, ParenthesizedExpressionNode))
+
+        bin_expr = ast.main_expression.operand.main_expression
+        self.assertTrue(isinstance(bin_expr, BinaryExpressionNode))
