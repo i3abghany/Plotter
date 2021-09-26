@@ -1,6 +1,7 @@
 import numpy as np
 
 from expr_parser.nodes import *
+
 from expr_parser.tokens import *
 
 
@@ -22,7 +23,7 @@ class Evaluator:
             try:
                 return self.variable_map[node.identifier_token.value]
             except KeyError:
-                raise Exception(f"Evaluation Error: invalid identifier {node.identifier_token.value}")
+                raise Exception(f"Evaluation Error: Invalid identifier {node.identifier_token.value}")
 
         if isinstance(node, ParenthesizedExpressionNode):
             return self.__eval(node.main_expression)
@@ -49,7 +50,6 @@ class Evaluator:
                 return -self.__eval(node.operand)
             else:
                 raise Exception(f"Evaluation Error: Invalid unary operator \'{node.operator_token.kind.name}\'")
-
 
 
 def evaluate_in_range(ast, min_x=0, max_x=1, delta=0.0):
