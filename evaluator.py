@@ -1,4 +1,5 @@
-from expr_parser.AST import AST
+import numpy as np
+
 from expr_parser.nodes import *
 from expr_parser.tokens import *
 
@@ -38,3 +39,22 @@ class Evaluator:
                 return left ** right
             else:
                 raise Exception(f"Evaluation Error: Invalid binary operator \'{node.operator_token.kind.name}\'")
+
+
+def evaluate_in_range(ast, min_x=0, max_x=1, delta=0.0):
+    if min_x > max_x:
+        min_x, max_x = max_x, min_x
+
+    if delta == 0.0:
+        delta = (max_x - min_x) / 50000
+
+    x_range = np.arange(min_x, max_x, delta)
+    y_values = []
+
+    evaluator = Evaluator(ast)
+
+    for x_point in np.arange(min_x, max_x, delta):
+        evaluator.set_var('x', x_point)
+        y_values.append(evaluator.eval())
+
+    return x_range, y_values
