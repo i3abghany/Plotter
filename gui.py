@@ -59,28 +59,28 @@ class PlotterWidget(QWidget):
         f = self.pan_button.font()
         f.setPointSize(12)
         self.pan_button.setFont(f)
-        self.pan_button.setGeometry(830, 290, 85, 30)
+        self.pan_button.setGeometry(830, 305, 85, 30)
         self.pan_button.clicked.connect(self.toolbar.pan)
 
     def init_save_button(self):
         f = self.save_button.font()
         f.setPointSize(12)
         self.save_button.setFont(f)
-        self.save_button.setGeometry(830, 330, 85, 30)
+        self.save_button.setGeometry(830, 345, 85, 30)
         self.save_button.clicked.connect(self.toolbar.save_figure)
 
     def init_reset_button(self):
         f = self.reset_button.font()
         f.setPointSize(11)
         self.reset_button.setFont(f)
-        self.reset_button.setGeometry(830, 250, 85, 30)
+        self.reset_button.setGeometry(830, 265, 85, 30)
         self.reset_button.clicked.connect(self.toolbar.home)
 
     def init_zoom_button(self):
         f = self.zoom_button.font()
         f.setPointSize(12)
         self.zoom_button.setFont(f)
-        self.zoom_button.setGeometry(830, 210, 85, 30)
+        self.zoom_button.setGeometry(830, 225, 85, 30)
         self.zoom_button.clicked.connect(self.toolbar.zoom)
 
     def init_ui(self):
