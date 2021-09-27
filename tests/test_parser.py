@@ -43,7 +43,7 @@ class TestParser(unittest.TestCase):
         ast = parser.parse()
         errors = ast.errors
         self.assertEqual(len(errors), 1)
-        self.assertEqual(errors[0], 'Parser Error: Unexpected token of type \'EOF\', expected \'NUMBER\'.')
+        self.assertEqual(errors[0], 'Parser Error: Unexpected token of type \'END_OF_FILE\', expected an expression.')
 
     def test_expect_eof_after_full_expression(self):
         expr = '1 1'
@@ -51,7 +51,7 @@ class TestParser(unittest.TestCase):
         ast = parser.parse()
         errors = ast.errors
         self.assertEqual(len(errors), 1)
-        self.assertEqual(errors[0], 'Parser Error: Unexpected token 1.0 of type \'NUMBER\', expected \'EOF\'.')
+        self.assertEqual(errors[0], 'Parser Error: Unexpected token 1.0 of type \'NUMBER\', expected \'END_OF_FILE\'.')
 
     def test_expect_right_paren(self):
         expr = '(1 + 2 * x'
@@ -60,7 +60,7 @@ class TestParser(unittest.TestCase):
         errors = ast.errors
 
         self.assertEqual(len(errors), 1)
-        self.assertEqual(errors[0], "Parser Error: Unexpected token of type 'EOF', expected 'RIGHT_PAREN'.")
+        self.assertEqual(errors[0], "Parser Error: Unexpected token of type 'END_OF_FILE', expected 'RIGHT_PAREN'.")
 
     def test_correct_parenthesized_expression(self):
         expr = '(1 + 2) * x'

@@ -12,7 +12,7 @@ class TokenKind(enum.Enum):
     IDENTIFIER = 6
     LEFT_PAREN = 7
     RIGHT_PAREN = 8
-    EOF = 9
+    END_OF_FILE = 9
 
 
 class Token:

@@ -76,20 +76,20 @@ class Parser:
             operand = self.parse_expression()
             return UnaryExpressionNode(minus_token, operand)
 
-        number_token = self.match_if(TokenKind.NUMBER)
+        number_token = self.match_if(TokenKind.NUMBER, expect_expression=True)
         return NumberExpressionNode(number_token)
 
     def parse(self):
         """ The public interface of a Parser, generates the full AST from the input string at
         construction time.
 
-        It expects an EOF token after exactly one full expression, so an expression like 1 1 would not work.
+        It expects an END_OF_FILE token after exactly one full expression, so an expression like 1 1 would not work.
 
         :rtype: AST
         :return: the AST of the input expression
         """
         expression = self.parse_expression()
-        eof_token = self.match_if(TokenKind.EOF)
+        eof_token = self.match_if(TokenKind.END_OF_FILE)
         return AST(self.errors, expression, eof_token, self.identifiers)
 
     def parse_expression(self, parent_precedence=0):
@@ -124,15 +124,16 @@ class Parser:
     def does_match(self, token_kind):
         return self.get_current().kind == token_kind
 
-    def match_if(self, token_kind):
+    def match_if(self, token_kind, expect_expression=False):
         if self.get_current().kind == token_kind:
             return self.next_token()
         else:
             value = self.get_current().value
             kind_name = self.get_current().kind.name
+            expected = "an expression" if expect_expression else "'" + token_kind.name + "'"
             self.errors.append(
                 f'Parser Error: Unexpected token{" " + str(value) if value is not None else ""} '
-                f'of type \'{kind_name}\', expected \'{token_kind.name}\'.')
+                f'of type \'{kind_name}\', expected {expected}.')
             return Token(token_kind, None, self.get_current().position)
 
     def next_token(self):

@@ -50,7 +50,7 @@ class Lexer:
 
             self.__next_char()
 
-        self.tokens.append(Token(TokenKind.EOF, None, self.position + 1))
+        self.tokens.append(Token(TokenKind.END_OF_FILE, None, self.position + 1))
         return self.tokens
 
     def __next_char(self):
