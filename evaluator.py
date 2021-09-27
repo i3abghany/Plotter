@@ -1,3 +1,6 @@
+import multiprocessing
+import functools
+
 import numpy as np
 
 from expr_parser.nodes import *
@@ -81,7 +84,12 @@ class Evaluator:
                 raise Exception(f"Evaluation Error: Invalid unary operator \'{node.operator_token.kind.name}\'")
 
 
-def evaluate_in_range(ast, min_x=0, max_x=1, delta=0.0):
+def get_y(evaluator, x_point):
+    evaluator.set_var('x', x_point)
+    return evaluator.eval()
+
+
+def evaluate_in_range(ast, min_x=0, max_x=1, delta=0.0, n_points=50000):
     """ Evaluates an AST object in the defined range.
 
     :param ast: The AST object to evaluate.
@@ -94,16 +102,19 @@ def evaluate_in_range(ast, min_x=0, max_x=1, delta=0.0):
     if min_x > max_x:
         min_x, max_x = max_x, min_x
 
+    if min_x == max_x:
+        return [], []
+
     if delta == 0.0:
-        delta = (max_x - min_x) / 50000
+        delta = (max_x - min_x) / n_points
 
     x_range = np.arange(min_x, max_x, delta)
-    y_values = []
 
     evaluator = Evaluator(ast)
+    thread_pool = multiprocessing.Pool(multiprocessing.cpu_count() - 1)
+    y_values = thread_pool.map(functools.partial(get_y, evaluator), x_range)
 
-    for x_point in np.arange(min_x, max_x, delta):
-        evaluator.set_var('x', x_point)
-        y_values.append(evaluator.eval())
+    thread_pool.close()
+    thread_pool.join()
 
     return x_range, y_values

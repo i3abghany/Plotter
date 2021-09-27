@@ -18,7 +18,7 @@ Takes a string expression as input, and constructs the [abstract syntax tree](ht
 
 ### Evaluator (evaluator.py)
 
-Takes in an AST object and recursively evaluates the result of computing the underlying expression. Identifiers must have associated values before attempting to evaluating the AST. This is used in the `evaluate_in_range` function that generates an array of equidistant points for the `x` input and evaluates the AST for each input point.
+Takes in an AST object and recursively evaluates the result of computing the underlying expression. Identifiers must have associated values before attempting to evaluating the AST. This is used in the `evaluate_in_range` function that generates an array of equidistant points for the `x` input and evaluates the AST for each input point. A multithreaded solution is used to evaluate all input points using the thread pooling capabilities of the `multiprocessing` package.
 
 ### GUI (gui.py)
 

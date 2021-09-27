@@ -1,6 +1,8 @@
 import unittest
 
-from evaluator import Evaluator
+import numpy as np
+
+from evaluator import Evaluator, evaluate_in_range
 from expr_parser.parser import Parser
 
 
