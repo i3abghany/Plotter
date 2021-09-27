@@ -76,3 +76,42 @@ class TestEvaluator(unittest.TestCase):
         expr = '-------------+++++++++++++++++++-----++-+-------------------3'
         result = self.get_result(expr)
         self.assertEqual(result, -------------+++++++++++++++++++-----++-+-------------------3)
+
+    def test_expect_invalid_identifier(self):
+        expr = '2 * 4'
+
+        def internal_call():
+            return self.get_result(expr, 'x', 123)
+
+        self.assertRaises(KeyError, internal_call)
+
+    def test_evaluate_in_range(self):
+        min_x = -100
+        max_x = 100
+        expr = '2^x + 10 * x ^ 2 - 12 * x + 1'
+
+        parser = Parser(expr)
+        ast = parser.parse()
+        x, y = evaluate_in_range(ast, min_x, max_x, n_points=10000)
+
+        delta = (max_x - min_x) / 10000
+        x_expected = np.arange(min_x, max_x, delta)
+
+        def internal_result(x_point):
+            return 2 ** x_point + 10 * x_point ** 2 - 12 * x_point + 1
+
+        y_expected = []
+        for x_value in x_expected:
+            y_expected.append(internal_result(x_value))
+
+        self.assertTrue(np.array_equal(x_expected, x))
+        self.assertTrue(np.array_equal(y_expected, y))
+
+    def test_empty_range(self):
+        expr = '1 + 2'
+
+        parser = Parser(expr)
+        ast = parser.parse()
+        x, y = evaluate_in_range(ast, 1, 1, n_points=10000)
+        self.assertEqual(x, [])
+        self.assertEqual(y, [])
