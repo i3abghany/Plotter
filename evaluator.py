@@ -27,7 +27,10 @@ class Evaluator:
         :param val: The value to substitute in the place of an identifier
         :type val: float
         """
-        self.variable_map[name] = val
+        if name in self.ast.identifiers:
+            self.variable_map[name] = val
+        else:
+            raise KeyError(f"Evaluation Error: Invalid Identifier \'{name}\'")
 
     def eval(self):
         """ An interface method to evaluate the AST provided at construction-time.

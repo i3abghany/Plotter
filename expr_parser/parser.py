@@ -14,6 +14,7 @@ class Parser:
         self.tokens = self.lexer.tokenize()
         self.position = 0
         self.errors = self.lexer.errors
+        self.identifiers = set()
         self.binary_operator_precedences = {
             TokenKind.PLUS: 1,
             TokenKind.MINUS: 1,
@@ -63,6 +64,7 @@ class Parser:
 
         if self.does_match(TokenKind.IDENTIFIER):
             identifier_token = self.match_if(TokenKind.IDENTIFIER)
+            self.identifiers.add(identifier_token.value)
             return IdentifierNode(identifier_token)
 
         if self.does_match(TokenKind.PLUS):
@@ -88,7 +90,7 @@ class Parser:
         """
         expression = self.parse_expression()
         eof_token = self.match_if(TokenKind.EOF)
-        return AST(self.errors, expression, eof_token)
+        return AST(self.errors, expression, eof_token, self.identifiers)
 
     def parse_expression(self, parent_precedence=0):
         """ Calls itself recursively based on operator precedences to parse a full expression.

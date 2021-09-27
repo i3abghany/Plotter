@@ -1,9 +1,10 @@
 class AST:
 
-    def __init__(self, errors, main_expression, eof_token):
+    def __init__(self, errors, main_expression, eof_token, identifiers):
         self.main_expression = main_expression
         self.eof_token = eof_token
         self.errors = errors
+        self.identifiers = identifiers
 
 
 def print_ast(node, indent="", is_last=True):
