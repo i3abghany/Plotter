@@ -1,3 +1,5 @@
+import os
+import subprocess
 import sys
 from PyQt5.QtWidgets import QApplication
 
@@ -11,6 +13,20 @@ def main():
     sys.exit(app.exec_())
 
 
-if __name__ == '__main__':
-    main()
+def run_tests():
+    project_dir = os.path.dirname(os.path.abspath(__file__))
+    sys.exit(subprocess.call([sys.executable,
+                              '-m',
+                              'unittest',
+                              'discover',
+                              '-t',
+                              f'{project_dir}/test',
+                              '-s',
+                              f'{project_dir}/test']))
 
+
+if __name__ == '__main__':
+    if '--test' in sys.argv:
+        run_tests()
+    else:
+        main()

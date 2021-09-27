@@ -52,3 +52,7 @@ Example erroneous inputs that get discovered by the parser:
 The evaluator must be only called using an AST that contains no errors. Thus, errors reported by the lexer and the parser must be handled before calling `Evaluator.eval()`. The errors reported by the evaluator include having no value to an identifier. The expression `x + y` is evaluable correctly _if and only if_ the evaluator is aware of the values of `x` and `y` before evaluation time. If such an expression is passed to the evaluator without the values of one or more of the identifiers, it will raise an error.
 
 ![evaluator_error_1](/screenshots/1.png)
+
+## Tests
+
+`Lexer`, `Parser`, and `Evaluator` have unit tests inside the `test` directory. Tests could be run by adding the `--test` option to the command line arguments to run tests. Alternatively, `make test` can also run tests. 
