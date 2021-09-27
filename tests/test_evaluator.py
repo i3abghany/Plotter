@@ -35,9 +35,9 @@ class TestEvaluator(unittest.TestCase):
         self.assertEqual(result, (4 + 2) * 3)
 
     def test_exponentiation(self):
-        expr = '2 ^ 10 + 1233123'
+        expr = '2 ^ -10 + 1233123'
         result = self.get_result(expr)
-        self.assertEqual(result, 2 ** 10 + 1233123)
+        self.assertEqual(result, 2 ** -10 + 1233123)
 
     def test_substitution(self):
         expr = 'x ^ 4 * 123 + 4'
