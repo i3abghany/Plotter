@@ -19,7 +19,7 @@ class Parser:
             TokenKind.MINUS: 1,
             TokenKind.STAR: 2,
             TokenKind.SLASH: 2,
-            TokenKind.CARET: 3
+            TokenKind.CARET: 4
         }
 
         self.unary_operator_precedences = {
