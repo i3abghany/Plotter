@@ -6,10 +6,11 @@ from gui import PlotterWidget
 
 def main():
     app = QApplication(sys.argv)
-    demo = PlotterWidget([], [])
-    demo.show()
+    plotter_widget = PlotterWidget([], [])
+    plotter_widget.show()
     sys.exit(app.exec_())
 
 
 if __name__ == '__main__':
     main()
+
